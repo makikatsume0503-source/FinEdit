@@ -638,6 +638,77 @@ section {
 
 .contact-link:hover { color: var(--gold); }
 
+/* Contact Form */
+.contact-form {
+  margin-top: 2rem;
+  text-align: left;
+}
+.form-group {
+  margin-bottom: 1.5rem;
+}
+.form-label {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: rgba(15, 26, 46, 0.5);
+  border: 1px solid rgba(197, 160, 85, 0.2);
+  border-radius: 2px;
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  transition: border-color 0.3s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+  background: rgba(26, 42, 69, 0.6);
+}
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4ad5a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+}
+.form-select option {
+  background: var(--navy);
+  color: var(--cream);
+}
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+.form-submit {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--gold);
+  padding: 1rem 3rem;
+  border: none;
+  border-radius: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+.form-submit:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(197, 160, 85, 0.2);
+}
+
 /* ===== FOOTER ===== */
 footer {
   padding: 3rem 2rem;
@@ -946,7 +1017,38 @@ footer {
     <p class="contact-text">
       ライティング・広報・AI活用のご相談など、<br>お気軽にお問い合わせください。
     </p>
-    <a href="mailto:contact@makikatsume.com" class="contact-btn">Contact</a>
+    
+    <form class="contact-form" action="https://formspree.io/f/mzdkadga" method="POST">
+      <div class="form-group">
+        <label class="form-label" for="company">会社名（任意）</label>
+        <input type="text" id="company" name="会社名" class="form-input" placeholder="株式会社〇〇">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="name">担当者名（必須）</label>
+        <input type="text" id="name" name="担当者名" class="form-input" required placeholder="山田 太郎">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">メールアドレス（必須）</label>
+        <input type="email" id="email" name="email" class="form-input" required placeholder="info@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="subject">お問い合わせ項目（必須）</label>
+        <select id="subject" name="お問い合わせ項目" class="form-select" required>
+          <option value="" disabled selected>選択してください</option>
+          <option value="記事執筆・コンテンツ制作">記事執筆・コンテンツ制作</option>
+          <option value="AI活用コンサルティング">AI活用コンサルティング</option>
+          <option value="広報・PRサポート">広報・PRサポート</option>
+          <option value="登壇・セミナー依頼">登壇・セミナー依頼</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="message">お問い合わせ内容（必須）</label>
+        <textarea id="message" name="お問い合わせ内容" class="form-textarea" required placeholder="ご相談内容をご記入ください"></textarea>
+      </div>
+      <button type="submit" class="form-submit">Send Message</button>
+    </form>
+
     <div class="contact-links">
       <a href="https://makikatsume.com/" class="contact-link" target="_blank">Website</a>
       <a href="https://note.com/katsume0503" class="contact-link" target="_blank">note</a>
