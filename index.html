@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinEdit | 勝目麻希 — 伝わるに、Re:Edit する。</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500;700&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy: #0f1a2e;
+  --navy-mid: #1a2a45;
+  --navy-light: #243556;
+  --gold: #d4ad5a;
+  --gold-light: #e0c478;
+  --gold-pale: #f0e6d0;
+  --cream: #fcfaf6;
+  --white: #ffffff;
+  --gray-100: #f5f4f1;
+  --gray-300: #e0ded8;
+  --gray-500: #b0ada6;
+  --gray-700: #6a6862;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Noto Sans JP', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--cream);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-wrap: pretty;
+  word-break: auto-phrase;
+}
+
+/* ===== NAVIGATION ===== */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1.2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(15, 26, 46, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(197, 160, 85, 0.1);
+  transition: all 0.4s ease;
+}
+
+nav.scrolled {
+  padding: 0.8rem 3rem;
+  background: rgba(15, 26, 46, 0.95);
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--cream);
+  letter-spacing: 0.15em;
+  text-decoration: none;
+}
+
+.nav-logo span {
+  color: var(--gold);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--gray-300);
+  text-decoration: none;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover { color: var(--gold-light); }
+.nav-links a:hover::after { width: 100%; }
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding: 6rem 2rem;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(197, 160, 85, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(197, 160, 85, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(26, 42, 69, 0.8) 0%, transparent 70%);
+  animation: subtleFloat 20s ease-in-out infinite;
+}
+
+@keyframes subtleFloat {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(1%, -1%) rotate(0.5deg); }
+  66% { transform: translate(-1%, 1%) rotate(-0.5deg); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.3s forwards;
+}
+
+.hero-brand {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 10vw, 9rem);
+  font-weight: 300;
+  color: var(--cream);
+  letter-spacing: 0.08em;
+  line-height: 1;
+  margin-bottom: 1rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.5s forwards;
+}
+
+.hero-brand .accent {
+  color: var(--gold);
+  font-style: italic;
+}
+
+.hero-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold-light);
+  letter-spacing: 0.1em;
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.7s forwards;
+}
+
+.hero-sub {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--cream);
+  opacity: 0;
+  line-height: 2;
+  max-width: 420px;
+  margin: 0 auto 3rem;
+  animation: fadeUp 1s ease 0.9s forwards;
+}
+
+.hero-scroll {
+  opacity: 0;
+  animation: fadeUp 1s ease 1.2s forwards;
+}
+
+.hero-scroll a {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  transition: color 0.3s;
+}
+
+.hero-scroll a:hover { color: var(--gold); }
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1); }
+  50% { opacity: 1; transform: scaleY(1.2); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== SECTION COMMON ===== */
+section {
+  padding: 7rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  color: var(--cream);
+  line-height: 1.3;
+  margin-bottom: 1.5rem;
+}
+
+.section-divider {
+  width: 60px;
+  height: 1px;
+  background: var(--gold);
+  margin-bottom: 3rem;
+}
+
+/* ===== STORY ===== */
+#story {
+  border-top: 1px solid rgba(197, 160, 85, 0.1);
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.story-left .section-title {
+  margin-bottom: 2rem;
+}
+
+.story-text {
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 2.2;
+  color: var(--cream);
+  opacity: 0.85;
+}
+
+.story-text strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.story-right {
+  position: relative;
+  padding: 3rem;
+  border: 1px solid rgba(197, 160, 85, 0.15);
+  border-radius: 2px;
+  background: rgba(197, 160, 85, 0.03);
+}
+
+.story-right::before {
+  content: '"';
+  position: absolute;
+  top: -0.3rem;
+  left: 1.5rem;
+  font-family: var(--font-display);
+  font-size: 5rem;
+  color: var(--gold);
+  opacity: 0.3;
+  line-height: 1;
+}
+
+.story-quote {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--cream);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.story-caption {
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+}
+
+.fin-meaning {
+  margin-top: 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.fin-card {
+  padding: 1.5rem;
+  border: 1px solid rgba(197, 160, 85, 0.12);
+  border-radius: 2px;
+  text-align: center;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.fin-card:hover {
+  border-color: rgba(197, 160, 85, 0.3);
+  background: rgba(197, 160, 85, 0.04);
+}
+
+.fin-card-label {
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+  margin-bottom: 0.5rem;
+}
+
+.fin-card-word {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+}
+
+.fin-card-meaning {
+  font-size: 0.8rem;
+  color: var(--gray-300);
+  font-weight: 300;
+}
+
+/* ===== SERVICES ===== */
+#services {
+  border-top: 1px solid rgba(197, 160, 85, 0.1);
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.service-card {
+  position: relative;
+  padding: 2.5rem 2rem;
+  border: 1px solid rgba(197, 160, 85, 0.12);
+  border-radius: 2px;
+  background: rgba(15, 26, 46, 0.5);
+  transition: all 0.4s ease;
+  overflow: hidden;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.service-card:hover {
+  border-color: rgba(197, 160, 85, 0.3);
+  background: rgba(26, 42, 69, 0.6);
+  transform: translateY(-4px);
+}
+
+.service-card:hover::before { opacity: 1; }
+
+.service-number {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 300;
+  color: var(--gold);
+  opacity: 0.25;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+}
+
+.service-title {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--cream);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+
+.service-title-en {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 300;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+}
+
+.service-desc {
+  font-size: 0.84rem;
+  font-weight: 400;
+  color: var(--cream);
+  opacity: 0.8;
+  line-height: 2;
+  margin-bottom: 1.5rem;
+}
+
+.service-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.service-tag {
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: var(--gold);
+  padding: 0.25rem 0.7rem;
+  border: 1px solid rgba(197, 160, 85, 0.2);
+  border-radius: 1px;
+  letter-spacing: 0.05em;
+}
+
+/* ===== PROFILE ===== */
+#profile {
+  border-top: 1px solid rgba(197, 160, 85, 0.1);
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.profile-card {
+  padding: 2.5rem;
+  border: 1px solid rgba(197, 160, 85, 0.15);
+  border-radius: 2px;
+  background: rgba(197, 160, 85, 0.03);
+  text-align: center;
+}
+
+.profile-name-jp {
+  font-family: var(--font-body);
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--cream);
+  margin-bottom: 0.3rem;
+}
+
+.profile-name-en {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  margin-bottom: 1.2rem;
+}
+
+.profile-titles {
+  font-size: 0.8rem;
+  color: var(--cream);
+  opacity: 0.75;
+  line-height: 2;
+  margin-bottom: 1.5rem;
+}
+
+.profile-creds {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(212, 173, 90, 0.2);
+}
+
+.profile-cred {
+  font-size: 0.72rem;
+  color: var(--gray-300);
+  letter-spacing: 0.05em;
+}
+
+.profile-bio {
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--cream);
+  opacity: 0.85;
+  line-height: 2.2;
+}
+
+.profile-bio + .profile-bio {
+  margin-top: 1.2rem;
+}
+
+/* ===== ACHIEVEMENTS ===== */
+.achievements {
+  margin-top: 3.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.achievement {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  border: 1px solid rgba(197, 160, 85, 0.08);
+  border-radius: 2px;
+}
+
+.achievement-number {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.achievement-unit {
+  font-size: 0.75rem;
+  color: var(--gold-light);
+}
+
+.achievement-label {
+  font-size: 0.7rem;
+  color: var(--gray-500);
+  margin-top: 0.3rem;
+  line-height: 1.5;
+}
+
+/* ===== CONTACT ===== */
+#contact {
+  border-top: 1px solid rgba(197, 160, 85, 0.1);
+  text-align: center;
+}
+
+.contact-inner {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-text {
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--cream);
+  opacity: 0.8;
+  line-height: 2;
+  margin-bottom: 2.5rem;
+}
+
+.contact-btn {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--gold);
+  padding: 1rem 3rem;
+  text-decoration: none;
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+.contact-btn:hover {
+  background: var(--gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(197, 160, 85, 0.2);
+}
+
+.contact-links {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+}
+
+.contact-link {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--gray-500);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.contact-link:hover { color: var(--gold); }
+
+/* ===== FOOTER ===== */
+footer {
+  padding: 3rem 2rem;
+  text-align: center;
+  border-top: 1px solid rgba(197, 160, 85, 0.08);
+}
+
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--gray-500);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+
+.footer-tagline {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--gold);
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
+
+.footer-copy {
+  font-size: 0.65rem;
+  color: var(--gray-500);
+  letter-spacing: 0.1em;
+}
+
+/* ===== SCROLL ANIMATION ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  
+  .story-grid,
+  .profile-layout {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .achievements {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .fin-meaning {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  section { padding: 4rem 1.5rem; }
+
+  .hero-sub {
+    font-size: 0.78rem;
+    max-width: 90%;
+    padding: 0 0.5rem;
+  }
+
+  .story-text {
+    font-size: 0.84rem;
+  }
+
+  .service-desc {
+    font-size: 0.8rem;
+  }
+
+  .profile-bio {
+    font-size: 0.84rem;
+  }
+
+  .story-quote {
+    font-size: 1.2rem;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .contact-text {
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-brand { font-size: 3.2rem; }
+  .achievements { grid-template-columns: 1fr 1fr; }
+  
+  .hero-sub {
+    font-size: 0.75rem;
+    max-width: 92%;
+  }
+
+  .story-text,
+  .service-desc,
+  .profile-bio,
+  .contact-text {
+    font-size: 0.78rem;
+    line-height: 2;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Fin<span>Edit</span></a>
+  <ul class="nav-links">
+    <li><a href="#story">Story</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#profile">Profile</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">Maki Katsume</p>
+    <h1 class="hero-brand">F<span class="accent">in</span>Edit</h1>
+    <p class="hero-tagline">伝わるに、Re:Edit する。</p>
+    <p class="hero-sub">
+      複雑な専門知識を、<br>あなたの言葉に仕上げ直す。<br>金融・AI・教育の<br>専門ライター＆広報パートナー。
+    </p>
+    <div class="hero-scroll">
+      <a href="#story">
+        Scroll
+        <span class="scroll-line"></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section id="story">
+  <div class="story-grid">
+    <div class="story-left reveal">
+      <p class="section-label">Brand Story</p>
+      <h2 class="section-title">Fin（翼）× Edit（編集）</h2>
+      <div class="section-divider"></div>
+      <p class="story-text">
+        FinEditは、<strong>Financial × Edit</strong>——<br>金融の専門知識を編集するところから始まりました。<br><br>
+        三菱UFJ銀行の法人営業で培った知見を、<br>「読んでよかった」と思ってもらえる言葉に変える。<br>それが原点です。<br><br>
+        でも活動を続ける中で、<br>届けたいものは金融だけではなくなりました。<br>AI、教育、子育て支援。<br>難しい知識をわかりやすい形で届けるという意味では、<br>どの分野でもやっていることは同じ。<br><br>
+        そこで気づいたのです。<br><strong>Finにはもう一つの意味がある</strong>——「翼」。<br>重たい専門知を、翼のようにふわっと軽くして届ける。<br>それが私のEditです。
+      </p>
+
+      <div class="fin-meaning">
+        <div class="fin-card">
+          <p class="fin-card-label">Origin</p>
+          <p class="fin-card-word">Financial</p>
+          <p class="fin-card-meaning">金融の専門知識</p>
+        </div>
+        <div class="fin-card">
+          <p class="fin-card-label">Evolution</p>
+          <p class="fin-card-word">Fin — 翼</p>
+          <p class="fin-card-meaning">軽やかに届ける力</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="story-right reveal">
+      <p class="story-quote">
+        難しくて重たい専門知識を、<br>
+        翼のように軽くして、<br>
+        届くべき人のもとへ届ける。
+      </p>
+      <p class="story-caption">— FinEdit のコアバリュー</p>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="reveal">
+    <p class="section-label">Services</p>
+    <h2 class="section-title">3つの専門領域で、<br>「伝わる」をつくる。</h2>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <p class="service-number">01</p>
+      <h3 class="service-title">ライティング・編集</h3>
+      <p class="service-title-en">Writing & Editing</p>
+      <p class="service-desc">
+        金融・経済・ビジネス・教育分野を中心に、<br>SEO記事、コラム、インタビュー記事、<br>書籍・パンフレット制作まで。<br>専門性と読みやすさを両立する<br>コンテンツを制作します。
+      </p>
+      <div class="service-tags">
+        <span class="service-tag">SEO記事</span>
+        <span class="service-tag">コラム</span>
+        <span class="service-tag">取材・インタビュー</span>
+        <span class="service-tag">メルマガ</span>
+        <span class="service-tag">書籍制作</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal">
+      <p class="service-number">02</p>
+      <h3 class="service-title">AI活用コンサルティング</h3>
+      <p class="service-title-en">AI Consulting & Training</p>
+      <p class="service-desc">
+        中小企業のAI導入支援から、<br>起業家・ママ向けの生成AI実践講座まで。<br>自らAIでLP制作やシステム構築を行う<br>実践者として、「使える」を一緒につくります。
+      </p>
+      <div class="service-tags">
+        <span class="service-tag">AI導入支援</span>
+        <span class="service-tag">業務効率化</span>
+        <span class="service-tag">実践講座</span>
+        <span class="service-tag">ワークショップ</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal">
+      <p class="service-number">03</p>
+      <h3 class="service-title">広報・PRパートナー</h3>
+      <p class="service-title-en">PR & Communications</p>
+      <p class="service-desc">
+        専門団体や中小企業の広報戦略をサポート。<br>SNS運用代行、プレスリリース、<br>インタビュー連載など、<br>「伝わる広報」を設計・実行します。
+      </p>
+      <div class="service-tags">
+        <span class="service-tag">広報戦略</span>
+        <span class="service-tag">SNS運用</span>
+        <span class="service-tag">メディア対応</span>
+        <span class="service-tag">コンテンツ企画</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE -->
+<section id="profile">
+  <div class="reveal">
+    <p class="section-label">Profile</p>
+    <h2 class="section-title">勝目 麻希</h2>
+    <div class="section-divider"></div>
+  </div>
+
+  <div class="profile-layout">
+    <div class="profile-card reveal">
+      <p class="profile-name-jp">勝目 麻希</p>
+      <p class="profile-name-en">Maki Katsume</p>
+      <p class="profile-titles">
+        FinEdit 代表<br>
+        金融ライター<br>
+        AI活用コンサルタント<br>
+        広報パートナー
+      </p>
+      <div class="profile-creds">
+        <span class="profile-cred">元 三菱UFJ銀行（総合職）</span>
+        <span class="profile-cred">2級FP技能士</span>
+        <span class="profile-cred">証券外務員1種</span>
+        <span class="profile-cred">日商簿記3級</span>
+        <span class="profile-cred">TOEIC 875点</span>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <p class="profile-bio">
+        三菱UFJ銀行に新卒で総合職として入行し、<br>中小企業から大企業向けの<br>融資・金融商品の販売を経験。<br>転職・結婚・出産を経て、<br>2018年にフリーランスライターとして独立。
+      </p>
+      <p class="profile-bio">
+        金融機関・経済メディアの<br>コンテンツ制作を中心に、<br>広報サポート、中小企業向け<br>AI活用コンサルティング・講師業まで<br>幅広く展開。<br>「金融リテラシー × AI × 教育」をテーマに、<br>専門知を届く言葉に編集し、<br>人とビジネスに翼を与える。
+      </p>
+      <p class="profile-bio">
+        東海ライターチーム「Writing Ship」主宰。<br>一般社団法人日本小児発達子育て支援協会<br>（CDPSA）広報担当。<br>名古屋在住、2児の母。
+      </p>
+
+      <div class="achievements">
+        <div class="achievement">
+          <p class="achievement-number">90<span class="achievement-unit">万PV</span></p>
+          <p class="achievement-label">Yahoo!ニュース<br>月間最高PV</p>
+        </div>
+        <div class="achievement">
+          <p class="achievement-number">No.1</p>
+          <p class="achievement-label">Yahoo!ニュース<br>総合ランキング</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner reveal">
+    <p class="section-label">Contact</p>
+    <h2 class="section-title">お仕事のご相談</h2>
+    <div class="section-divider" style="margin-left:auto;margin-right:auto;"></div>
+    <p class="contact-text">
+      ライティング・広報・AI活用のご相談など、<br>お気軽にお問い合わせください。
+    </p>
+    <a href="mailto:contact@makikatsume.com" class="contact-btn">Contact</a>
+    <div class="contact-links">
+      <a href="https://makikatsume.com/" class="contact-link" target="_blank">Website</a>
+      <a href="https://note.com/katsume0503" class="contact-link" target="_blank">note</a>
+      <a href="https://x.com/maki_katstume" class="contact-link" target="_blank">X (Twitter)</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-brand">FinEdit</p>
+  <p class="footer-tagline">伝わるに、Re:Edit する。</p>
+  <p class="footer-copy">&copy; 2026 FinEdit — Maki Katsume. All rights reserved.</p>
+</footer>
+
+<script>
+// Navbar scroll effect
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, i * 100);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
